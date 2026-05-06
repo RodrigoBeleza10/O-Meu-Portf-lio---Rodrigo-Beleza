@@ -1,0 +1,91 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<style>
+    /* Estilizar os inputs que o Django gera automaticamente para ficarem modernos */
+    .django-form-styled input, 
+    .django-form-styled textarea, 
+    .django-form-styled select {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        color: #212529;
+        background-color: #f8f9fa;
+        border: 1px solid transparent;
+        border-radius: 1.5rem; /* Cantos arredondados */
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+    }
+    .django-form-styled input[type="file"] {
+        padding: 0.5rem 1.25rem;
+    }
+    .django-form-styled input:focus, 
+    .django-form-styled textarea:focus {
+        background-color: #ffffff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+    .django-form-styled .helptext {
+        font-size: 0.75rem;
+        color: #6c757d;
+        display: block;
+        margin-left: 10px;
+    }
+    .django-form-styled ul.errorlist {
+        color: #dc3545;
+        font-size: 0.85em;
+        list-style-type: none;
+        padding-left: 10px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-5 p-4 p-md-5">
+                
+                <div class="text-center mb-5">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-pen-fill fs-1"></i>
+                    </div>
+                    <h2 class="fw-bold">{{ titulo_pagina }}</h2>
+                    <p class="text-muted">Partilha o teu conhecimento com a comunidade.</p>
+                </div>
+
+                <!-- IMPORTANTE: enctype="multipart/form-data" é obrigatório para enviar imagens! -->
+                <form method="POST" enctype="multipart/form-data" class="django-form-styled">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark ms-2">{{ field.label }}</label>
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <span class="helptext">{{ field.help_text }}</span>
+                            {% endif %}
+                            
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1 ms-2 fw-bold">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                        <a href="{% url 'lista_artigos' %}" class="btn btn-light rounded-pill px-4 shadow-sm border">Cancelar</a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 shadow-sm fw-bold">
+                            <i class="bi bi-send-fill me-2"></i>Publicar Artigo
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

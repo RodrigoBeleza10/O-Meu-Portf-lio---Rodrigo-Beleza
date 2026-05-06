@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 # ==========================================
 # PÁGINAS PRINCIPAIS
 # ==========================================
+
+@login_required
 def home_view(request):
     return render(request, 'portfolio/home.html')
 

@@ -1,0 +1,98 @@
+{% extends 'portfolio/base.html' %}
+{% load markdownify %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <!-- Ferramentas do Autor -->
+            {% if request.user == artigo.autor or request.user.is_superuser %}
+            <div class="d-flex justify-content-end mb-4 gap-2">
+                <a href="{% url 'editar_artigo' artigo.id %}" class="btn btn-outline-warning rounded-pill px-4 shadow-sm"><i class="bi bi-pencil me-2"></i>Editar o meu Artigo</a>
+                <a href="{% url 'apagar_artigo' artigo.id %}" class="btn btn-outline-danger rounded-pill px-4 shadow-sm" onclick="return confirm('Apagar permanentemente?')"><i class="bi bi-trash me-2"></i>Apagar</a>
+            </div>
+            {% endif %}
+
+            <!-- Cabeçalho do Artigo -->
+            <div class="text-center mb-5">
+                <span class="badge bg-primary px-3 py-2 rounded-pill mb-3">{{ artigo.data_criacao|date:"d de F, Y" }}</span>
+                <h1 class="display-4 fw-bold mb-4">{{ artigo.titulo }}</h1>
+                <div class="d-flex align-items-center justify-content-center text-muted">
+                    <span class="fw-bold text-dark me-3"><i class="bi bi-person-circle me-2"></i>{{ artigo.autor.username }}</span>
+                </div>
+            </div>
+
+            {% if artigo.fotografia %}
+                <img src="{{ artigo.fotografia.url }}" class="img-fluid rounded-5 shadow-sm mb-5 w-100 object-fit-cover" style="max-height: 500px;" alt="{{ artigo.titulo }}">
+            {% endif %}
+
+            <!-- Corpo do Texto -->
+            <div class="article-content fs-5 text-dark" style="line-height: 1.8;">
+                {{ artigo.texto|markdownify|linebreaks }}
+            </div>
+
+            {% if artigo.link_externo %}
+            <div class="mt-5 p-4 bg-light rounded-4 text-center border">
+                <h5 class="fw-bold mb-3">Saber Mais</h5>
+                <a href="{{ artigo.link_externo }}" target="_blank" class="btn btn-dark rounded-pill px-5 py-2">Visitar Link Externo <i class="bi bi-box-arrow-up-right ms-2"></i></a>
+            </div>
+            {% endif %}
+
+            <!-- Sistema de Likes (Qualquer Pessoa) -->
+            <div class="mt-5 pt-4 border-top text-center">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="like" value="1">
+                    <button type="submit" class="btn btn-light rounded-pill px-4 py-2 border shadow-sm" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="bi bi-heart-fill text-danger fs-4 me-2 align-middle"></i>
+                        <span class="fs-4 fw-bold align-middle">{{ artigo.likes }} Gostos</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Secção de Comentários -->
+            <div class="mt-5 pt-5">
+                <h3 class="fw-bold mb-4"><i class="bi bi-chat-left-text text-primary me-2"></i>Comentários ({{ comentarios|length }})</h3>
+
+                <!-- Formulário de Comentário (Só Logados) -->
+                {% if request.user.is_authenticated %}
+                <div class="card border-0 shadow-sm rounded-4 mb-5 p-4 bg-light">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="comentar" value="1">
+                        {{ form_comentario.texto }}
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">Publicar Comentário</button>
+                        </div>
+                    </form>
+                </div>
+                {% else %}
+                <div class="alert alert-secondary rounded-4 text-center mb-5 border-0">
+                    <p class="mb-0">Para participar na discussão, <a href="{% url 'login' %}" class="fw-bold text-primary text-decoration-none">faça login</a> ou <a href="{% url 'registo' %}" class="fw-bold text-primary text-decoration-none">registe-se</a>.</p>
+                </div>
+                {% endif %}
+
+                <!-- Lista de Comentários -->
+                <div class="d-flex flex-column gap-4">
+                    {% for comp in comentarios %}
+                    <div class="d-flex gap-3">
+                        <div class="bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width: 45px; height: 45px;">
+                            {{ comp.autor.username.0|upper }}
+                        </div>
+                        <div class="bg-white p-3 rounded-4 shadow-sm border w-100">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold">{{ comp.autor.username }}</span>
+                                <span class="small text-muted">{{ comp.data_criacao|date:"d M H:i" }}</span>
+                            </div>
+                            <p class="mb-0 text-dark">{{ comp.texto }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

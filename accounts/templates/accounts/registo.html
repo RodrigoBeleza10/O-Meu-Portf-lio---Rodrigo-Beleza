@@ -1,0 +1,94 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<style>
+    .django-form-styled input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        color: #212529;
+        background-color: #f8f9fa;
+        border: 1px solid transparent;
+        border-radius: 50rem; 
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+    }
+    .django-form-styled input:focus {
+        background-color: #ffffff;
+        border-color: #0d6efd;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+    .django-form-styled ul.errorlist {
+        padding-left: 0;
+        list-style: none;
+        color: #dc3545;
+        font-size: 0.85em;
+        margin-top: 0.25rem;
+        font-weight: 500;
+    }
+    .django-form-styled .helptext {
+        font-size: 0.75rem;
+        color: #6c757d;
+        display: block;
+        margin-top: 4px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-5 p-4 p-md-5">
+                
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-person-plus-fill fs-1"></i>
+                    </div>
+                    <h2 class="fw-bold">Criar Conta</h2>
+                    <p class="text-muted small">Registe-se para aceder ao portfólio completo.</p>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 small py-2 text-center border-0 bg-primary bg-opacity-10 text-primary">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" class="django-form-styled">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted ms-2">{{ field.label }}</label>
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <span class="helptext">{{ field.help_text }}</span>
+                            {% endif %}
+                            
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1 ms-2 fw-bold"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 mt-4 shadow-sm fw-bold fs-5 transition-all">
+                        Registar Conta
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="small text-muted mb-0">Já tem uma conta? 
+                        <a href="{% url 'login' %}" class="text-primary text-decoration-none fw-bold">Faça Login aqui</a>
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -85,6 +85,10 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link fw-semibold {% if 'artigo' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'lista_artigos' %}">Artigos</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'makingofs' %}active{% endif %}" href="{% url 'makingofs' %}">Making Of</a>
                     </li>
                 </ul>

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-$yq6!ki5i^&k@m#*18$mj9f#s2odq2ottpljp6!6s$@7)5$95j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,12 +42,24 @@ INSTALLED_APPS = [
     'professor',
     'markdownify.apps.MarkdownifyConfig',
     'accounts',
+    'artigos',
 ]
 
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home' 
 LOGOUT_REDIRECT_URL = 'login'
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'https://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://127.0.0.1:8000',
+]
+
+# 2. Esta é a linha MÁGICA para o Codespaces! 
+# Ensina o Django a lidar com o facto de o site estar mascarado por trás do HTTPS do GitHub.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -135,4 +147,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL pública para aceder aos ficheiros
 MEDIA_URL = '/media/'
+
+
+# Para testes locais: Os e-mails vão aparecer impressos no teu terminal!
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Coloca aqui o teu email do Gmail
+EMAIL_HOST_USER = 'rodrigo.beleza04@gmail.com' 
+
+# Coloca aqui a App Password de 16 letras gerada no Passo 1 (SEM ESPAÇOS)
+EMAIL_HOST_PASSWORD = 'abcdefghijklmnop'
+
+USE_X_FORWARDED_HOST = True
+
 

@@ -3,36 +3,96 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card border-0 shadow-lg rounded-4 p-4">
+        <div class="col-md-8 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-5 p-4 p-md-5">
+                
+                <!-- Cabeçalho -->
                 <div class="text-center mb-4">
-                    <i class="bi bi-person-lock display-1 text-primary"></i>
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-person-lock fs-1"></i>
+                    </div>
                     <h2 class="fw-bold">Login</h2>
-                    <p class="text-muted">Aceda à gestão do seu portfólio</p>
+                    <p class="text-muted small">Aceda à gestão do seu portfólio.</p>
                 </div>
 
+                <!-- Gestão Dinâmica de Mensagens -->
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-danger small py-2">{{ message }}</div>
+                        {% if message.tags == 'success' %}
+                            <div class="alert alert-success rounded-4 small py-3 text-center border-0 fw-bold shadow-sm">
+                                <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
+                            </div>
+                        {% elif message.tags == 'error' %}
+                            <div class="alert alert-danger rounded-4 small py-3 text-center border-0 fw-bold shadow-sm">
+                                <i class="bi bi-exclamation-octagon-fill me-2"></i>{{ message }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info rounded-4 small py-3 text-center border-0 fw-bold shadow-sm">
+                                {{ message }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
 
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Username</label>
-                        <input type="text" name="username" class="form-control rounded-3" required>
+                <!-- Abas de Navegação (Tabs) -->
+                <ul class="nav nav-pills nav-justified mb-4 gap-2" id="loginTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill fw-bold shadow-sm" id="password-tab" data-bs-toggle="pill" data-bs-target="#password-login" type="button" role="tab">
+                            <i class="bi bi-key-fill me-1"></i>Password
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill fw-bold shadow-sm" id="magic-tab" data-bs-toggle="pill" data-bs-target="#magic-login" type="button" role="tab">
+                            <i class="bi bi-magic me-1"></i>Link Mágico
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Conteúdo das Abas -->
+                <div class="tab-content" id="loginTabsContent">
+                    
+                    <!-- TAB 1: Login com Password -->
+                    <div class="tab-pane fade show active" id="password-login" role="tabpanel">
+                        <form method="POST" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-muted ms-2">Username</label>
+                                <input type="text" name="username" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="O seu nome de utilizador" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-muted ms-2">Password</label>
+                                <input type="password" name="password" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="A sua palavra-passe" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 shadow-sm fw-bold fs-6 transition-all">
+                                Entrar
+                            </button>
+                        </form>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold">Password</label>
-                        <input type="password" name="password" class="form-control rounded-3" required>
+                    
+                    <!-- TAB 2: Login com Link Mágico -->
+                    <div class="tab-pane fade" id="magic-login" role="tabpanel">
+                        <form method="POST" action="{% url 'pedir_magic_link' %}">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-muted ms-2">Email</label>
+                                <input type="email" name="email" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="O seu email registado" required>
+                                <div class="form-text small ms-2 mt-2">Enviaremos um link de acesso direto para o seu email. Dispensa o uso de password!</div>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 shadow-sm fw-bold fs-6 transition-all">
+                                Enviar Link Mágico
+                            </button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 shadow-sm">Entrar</button>
-                </form>
-                
-                <div class="text-center mt-4">
-                    <p class="small text-muted">Não tem conta? <a href="{% url 'registo' %}" class="text-decoration-none">Registe-se aqui</a></p>
+                    
                 </div>
+                
+                <!-- Link para o Registo -->
+                <div class="text-center mt-4 pt-4 border-top">
+                    <p class="small text-muted mb-0">Não tem uma conta? 
+                        <a href="{% url 'registo' %}" class="text-primary text-decoration-none fw-bold">Registe-se aqui</a>
+                    </p>
+                </div>
+                
             </div>
         </div>
     </div>
