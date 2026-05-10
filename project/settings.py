@@ -164,4 +164,15 @@ EMAIL_HOST_PASSWORD = 'abcdefghijklmnop'
 
 USE_X_FORWARDED_HOST = True
 
+import environ
 
+# inicializar environ
+env = environ.Env()
+
+# ler ficheiro .env (opcional mas recomendado)
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+## definicao da base de dados psql em Neon
+DATABASES = {
+    "default": env.db("DATABASE_URL")
+}
