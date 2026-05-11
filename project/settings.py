@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'markdownify.apps.MarkdownifyConfig',
     'accounts',
     'artigos',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 
@@ -142,13 +144,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 import os
 
-# Pasta no servidor onde os ficheiros vão ser guardados
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# URL pública para aceder aos ficheiros
-MEDIA_URL = '/media/'
-
-
 # Para testes locais: Os e-mails vão aparecer impressos no teu terminal!
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -172,7 +167,22 @@ env = environ.Env()
 # ler ficheiro .env (opcional mas recomendado)
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
+}
+
 ## definicao da base de dados psql em Neon
 DATABASES = {
     "default": env.db("DATABASE_URL")
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
 }

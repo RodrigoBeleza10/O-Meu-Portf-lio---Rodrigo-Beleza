@@ -24,7 +24,7 @@ class UnidadeCurricular(models.Model):
     ano = models.IntegerField()
     semestre = models.CharField(max_length=200)
     ects = models.IntegerField()
-    imagem = models.ImageField(upload_to='ucs/')
+    imagem = models.ImageField(upload_to='ucs/', max_length=255)
     licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE, related_name='ucs')
     professores = models.ManyToManyField(Professor, related_name='ucs')
 
@@ -41,7 +41,7 @@ class Tecnologia(models.Model):
     NIVEL_CHOICES = [(i, str(i)) for i in range(1, 6)]
     
     nome = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='tecnologias/')
+    logo = models.ImageField(upload_to='tecnologias/',max_length=255)
     link_oficial = models.URLField()
     detalhes = models.TextField()
     nivel_interesse = models.IntegerField(choices=NIVEL_CHOICES)
@@ -89,7 +89,7 @@ class Projeto(models.Model):
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
     conceitos_aplicados = models.TextField()
-    imagem = models.ImageField(upload_to='projetos/')
+    imagem = models.ImageField(upload_to='projetos/', max_length=255)
     video_demo = models.URLField(blank=True, null=True)
     link_github = models.URLField(blank=True, null=True)
     
@@ -126,7 +126,7 @@ class MakingOf(models.Model):
 
     titulo = models.CharField(max_length=200)
     entidade_relacionada = models.CharField(max_length=50, choices=ENTIDADES_CHOICES, default='Geral')
-    fotografia_caderno = models.ImageField(upload_to='makingof/', blank=True, null=True)
+    fotografia_caderno = models.ImageField(upload_to='makingof/', blank=True, null=True, max_length=255)
     descricao_decisoes = models.TextField(blank=True)
     justificacao_modelacao = models.TextField(blank=True)
     erros_correcoes = models.TextField(blank=True)
@@ -138,3 +138,5 @@ class MakingOf(models.Model):
 
     def __str__(self):
         return f'{self.titulo} ({self.entidade_relacionada})'
+
+

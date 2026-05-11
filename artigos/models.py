@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Artigo(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Título")
     texto = models.TextField()
-    fotografia = models.ImageField(upload_to='artigos/', blank=True, null=True)
+    fotografia = models.ImageField(upload_to='artigos/', blank=True, null=True, max_length=255)
     link_externo = models.URLField(blank=True, null=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
     autor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='artigos_escritos')
